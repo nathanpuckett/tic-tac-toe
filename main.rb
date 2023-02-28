@@ -5,32 +5,42 @@ class Game
   @@rules = "\nWelcome to Ruby Tic Tac Toe for the Command Line!\n" \
             "\nPlease enter your moves in the following format:\n" \
             "\n'a1', 'b2', etc.\n" \
-            "\nEnjoy!\n\n"
+            "\nEnjoy!\n"
 
   def initialize
-    @whose_move = 'X'
+    @whose_move = 'O'
     @board = Board.new
     @moves = [
       ['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']
     ]
     @game_won = false
     start_game
+    game_over
   end
 
   def start_game
     puts @@rules
     until @game_won
+      @whose_move = switch_move
+      puts "\n"
       puts @board.board
       user_move
+      @game_won = winner?
       @board.refresh_board(@moves)
     end
   end
 
+  def game_over
+    puts "\n"
+    puts @board.board
+    puts "\nThree in a row - #{@whose_move} wins!"
+    puts "\n"
+  end
+
   def user_move
-    print "Please enter your move (#{@whose_move}): "
+    print "\nPlease enter your move (#{@whose_move}): "
     @move = gets.chomp.split('')
     @moves[@move[1].to_i - 1][@move[0].ord - 97] = @whose_move
-    @whose_move = switch_move
   end
 
   def switch_move
@@ -38,6 +48,16 @@ class Game
       'O'
     else
       'X'
+    end
+  end
+
+  def winner?
+    if @moves[0] == %w[X X X] || @moves[0] == %w[O O O] || @moves[1] == %w[X X X] || @moves[1] == %w[O O O]
+      true
+    elsif @moves[2] == %w[X X X] || @moves[2] == %w[O O O] || @moves.transpose[0] == %w[X X X]
+      true
+    else
+      false
     end
   end
 end
