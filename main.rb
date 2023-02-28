@@ -1,29 +1,38 @@
 # frozen_string_literal: false
 
-# board[2,5,8][0][3,9,15]
-
 # Game Class
 class Game
   def initialize
+    @whose_move = 'X'
     @board = Board.new
     @moves = [
       ['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']
     ]
+    @game_won = false
     start_game
   end
 
   def start_game
-    while true
+    until @game_won
       puts @board.board
-      get_move
+      user_move
       @board.refresh_board(@moves)
     end
   end
 
-  def get_move
+  def user_move
     print 'Please enter your move: '
     @move = gets.chomp.split('')
-    @moves[@move[1].to_i][@move[2].to_i] = @move[0]
+    @moves[@move[1].to_i - 1][@move[0].ord - 97] = @whose_move
+    @whose_move = switch_move
+  end
+
+  def switch_move
+    if @whose_move == 'X'
+      'O'
+    else
+      'X'
+    end
   end
 end
 
@@ -33,11 +42,11 @@ class Board
 
   def initialize
     @board = [
-      ['   0     1     2  '], ['      |     |     '],
-      ['0  -  |  -  |  -  '], [' _____|_____|_____'],
-      ['      |     |     '], ['1  -  |  -  |  -  '],
+      ['   a     b     c  '], ['      |     |     '],
+      ['1  -  |  -  |  -  '], [' _____|_____|_____'],
+      ['      |     |     '], ['2  -  |  -  |  -  '],
       [' _____|_____|_____'], ['      |     |     '],
-      ['2  -  |  -  |  -  '], ['      |     |     ']
+      ['3  -  |  -  |  -  '], ['      |     |     ']
     ]
   end
 
@@ -55,11 +64,3 @@ class Board
 end
 
 Game.new
-
-# game.get_move
-
-# game.moves[0][0] = 'X'
-
-# game.refresh_board
-
-# puts game.board
