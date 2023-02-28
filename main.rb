@@ -2,6 +2,11 @@
 
 # Game Class
 class Game
+  @@rules = "\nWelcome to Ruby Tic Tac Toe for the Command Line!\n" \
+            "\nPlease enter your moves in the following format:\n" \
+            "\n'a1', 'b2', etc.\n" \
+            "\nEnjoy!\n\n"
+
   def initialize
     @whose_move = 'X'
     @board = Board.new
@@ -13,6 +18,7 @@ class Game
   end
 
   def start_game
+    puts @@rules
     until @game_won
       puts @board.board
       user_move
@@ -21,7 +27,7 @@ class Game
   end
 
   def user_move
-    print 'Please enter your move: '
+    print "Please enter your move (#{@whose_move}): "
     @move = gets.chomp.split('')
     @moves[@move[1].to_i - 1][@move[0].ord - 97] = @whose_move
     @whose_move = switch_move
