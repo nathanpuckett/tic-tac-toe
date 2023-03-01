@@ -2,10 +2,10 @@
 
 # Game Class
 class Game
-  @@rules = "\nWelcome to Ruby Tic Tac Toe for the Command Line!\n" \
+  @@rules = "\nWelcome to Tic Tac Toe for the Command Line!\n" \
             "\nPlease enter your moves in the following format:\n" \
             "\n'a1', 'b2', etc.\n" \
-            "\nEnjoy!\n"
+            "\nX goes first!\n"
 
   def initialize
     @whose_move = 'O'
@@ -52,13 +52,40 @@ class Game
   end
 
   def winner?
-    if @moves[0] == %w[X X X] || @moves[0] == %w[O O O] || @moves[1] == %w[X X X] || @moves[1] == %w[O O O]
-      true
-    elsif @moves[2] == %w[X X X] || @moves[2] == %w[O O O] || @moves.transpose[0] == %w[X X X]
-      true
-    else
-      false
+    check_rows || check_columns || check_diag
+  end
+
+  def all_equal?(row)
+    return false if row.first == '-'
+
+    row.each_cons(2).all? { |x, y| x == y }
+  end
+
+  def check_rows
+    result = []
+    @moves.each do |row|
+      result.push(all_equal?(row))
     end
+    result.any?
+  end
+
+  def check_columns
+    result = []
+    @moves.transpose.each do |column|
+      result.push(all_equal?(column))
+    end
+    result.any?
+  end
+
+  def check_diag
+    result = []
+    diag_arr = [[], []]
+    diag_arr[0] << @moves[0][0] << @moves[1][1] << @moves[2][2]
+    diag_arr[1] << @moves[2][0] << @moves[1][1] << @moves[0][2]
+    diag_arr.each do |row|
+      result.push(all_equal?(row))
+    end
+    result.any?
   end
 end
 
